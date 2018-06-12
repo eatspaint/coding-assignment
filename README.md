@@ -21,10 +21,10 @@ Of course, should you have any questions you may contact your sponsor. Good luck
 ---
 
 ### Form Layout
-Where:
-1 = `Instructions`
-2 = `History`, a list of all previous searches & results
-3 = `Data` collation
+Where:\
+1 = `Instructions`\
+2 = `History`, a list of all previous searches & results\
+3 = `Data` collation\
 4 = `Progress` bar, advancing with the steps of the process.
 
 Desktop:
