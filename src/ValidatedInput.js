@@ -17,7 +17,7 @@ const StyledInput = styled.input`
   width: 100%;
   border: 1px solid ${Colors.midGrey};
   border-radius: 4px;
-`
+`;
 
 class ValidatedInput extends Component {
 

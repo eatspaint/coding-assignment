@@ -1,13 +1,14 @@
 import styled, { css } from 'styled-components';
-import { isBrowser } from "react-device-detect";
+import { isBrowser } from 'react-device-detect';
 
 /*********
 * COLORS *
 *********/
 
 const Colors = {
-  primary: '#108C78',
-  white: '#eee',
+  primary: '#108c78',
+  accent: '#3c0bff',
+  white: '#fff',
   lightGrey: '#f2f2f2',
   midGrey: '#e2e2e2',
   darkGrey: '#333',
@@ -36,22 +37,22 @@ const TextBase = styled.p`
   ${props => props.paddingBottom && css`
     padding-bottom: ${props.paddingBottom} !important;
   `}
-`
+`;
 
 const Logo = TextBase.extend`
   font-size: 2.4em;
-  font-weight: 600;
-  color: ${Colors.white};
-`
+  font-weight: bold;
+  color: ${Colors.darkGrey};
+`;
 
 const Heading = TextBase.extend`
   font-size: 1.6em;
   font-weight: 600;
-`
+`;
 
 const Text = TextBase.extend`
   font-size: 1.6em;
-`
+`;
 
 /*************
 * CONTAINERS *
@@ -63,37 +64,36 @@ const Container = styled.div`
   flex-direction: column;
   align-items: stretch;
   justify-content: space-around;
-`
+`;
 
 const Row = styled.div`
   display: flex;
   align-items: stretch;
   justify-content: space-around;
-`
+`;
 
 const Section = styled.div`
-  border: 1px solid ${Colors.midGrey};
-  border-radius: 4px;
+  border: 3px solid ${Colors.darkGrey};
   padding: 0;
   margin: 8px;
   flex: 1;
   display: flex;
   flex-direction: column;
-`
+`;
 
 const SectionHeader = styled.div`
   padding: 12px;
   background: ${Colors.lightGrey};
-  border-bottom: 1px solid ${Colors.midGrey};
-  border-radius: 4px 4px 0 0;
-`
+  border-bottom: 3px solid ${Colors.darkGrey};
+`;
 
 const SectionBody = styled.div`
   flex: 1;
   padding: 12px;
   height: 100%;
   box-sizing: border-box;
-`
+  background: ${Colors.white};
+`;
 
 const CenteredSectionBody = styled.div`
   width: 100%;
@@ -101,6 +101,28 @@ const CenteredSectionBody = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+/*********
+* BUTTON *
+*********/
+
+const Button = styled.button`
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.6em;
+  background: ${Colors.accent};
+  border: 3px solid ${Colors.darkGrey};
+  padding: 8px 16px;
+  margin: 4px 0;
+  color: ${Colors.white};
+  box-sizing: border-box;
+  ${props => props.fullWidth && css`
+    width: 100%;
+  `}
+  ${props => props.disabled && css`
+    background: ${Colors.midGrey};
+    cursor: arrow;
+  `}
 `
 
 export {
@@ -114,4 +136,5 @@ export {
   SectionHeader,
   SectionBody,
   CenteredSectionBody,
-}
+  Button,
+};

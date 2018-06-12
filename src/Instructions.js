@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { isMobile } from "react-device-detect";
+import { isMobile } from 'react-device-detect';
+import Emoji from 'react-emoji-render';
 
 import {
   Colors,
@@ -20,11 +21,11 @@ const Instructions = () => (
   <Section>
 
     <SectionHeader>
-      <Heading>Instructions</Heading>
+      <Heading>Instructions <Emoji text='🤓'/></Heading>
     </SectionHeader>
 
     <SectionBody>
-      <ol style={{margin: 0, paddingLeft: '20px'}}>
+      <ol style={{margin: 0, paddingLeft: '32px'}}>
         <StyledLi>Enter your information in the form { isMobile ? 'above' : 'below' }.</StyledLi>
         <StyledLi>Retrieve your estimate and add your own expected rent.</StyledLi>
         <StyledLi>Save your results.</StyledLi>

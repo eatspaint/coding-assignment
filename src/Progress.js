@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Emoji from 'react-emoji-render';
 
 import {
   Colors,
@@ -23,7 +24,7 @@ const Progress = ( {validators} ) => {
     <Section>
 
       <SectionHeader>
-        <Heading>Progress</Heading>
+        <Heading>Progress <Emoji text='⏰'/></Heading>
       </SectionHeader>
 
       <SectionBody>

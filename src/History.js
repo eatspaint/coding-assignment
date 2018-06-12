@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { isMobile } from "react-device-detect";
+import { isMobile } from 'react-device-detect';
+import Emoji from 'react-emoji-render';
 
 import {
   Colors,
@@ -37,7 +38,7 @@ class History extends Component {
       <Section>
 
         <SectionHeader>
-          <Heading>History</Heading>
+          <Heading>History <Emoji text='📓'/></Heading>
         </SectionHeader>
 
         <SectionBody>

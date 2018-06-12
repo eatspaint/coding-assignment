@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import Emoji from 'react-emoji-render';
 
 import ValidatedInput from './ValidatedInput';
 
@@ -11,6 +12,7 @@ import {
   Section,
   SectionHeader,
   SectionBody,
+  Button,
 } from './UIKit';
 
 class Data extends Component {
@@ -28,7 +30,7 @@ class Data extends Component {
       <Section>
 
         <SectionHeader>
-          <Heading>Data</Heading>
+          <Heading>Data <Emoji text='🔍'/></Heading>
         </SectionHeader>
 
         <SectionBody>
@@ -38,6 +40,7 @@ class Data extends Component {
           <ValidatedInput name='Email' value={email} />
           <ValidatedInput name='Address' value={address} />
           <ValidatedInput name='Expected Rent' value={expectedRent} />
+          <Button fullWidth disabled style={{marginBottom: 0}}>Find my rent estimate!</Button>
         </SectionBody>
 
       </Section>
