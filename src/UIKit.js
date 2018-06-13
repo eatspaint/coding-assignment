@@ -8,6 +8,7 @@ import { isBrowser } from 'react-device-detect';
 const Colors = {
   primary: '#108c78',
   accent: '#3c0bff',
+  error: '#d43f3f',
   white: '#fff',
   lightGrey: '#f2f2f2',
   midGrey: '#e2e2e2',
@@ -116,6 +117,7 @@ const Button = styled.button`
   margin: 4px 0;
   color: ${Colors.white};
   box-sizing: border-box;
+  cursor: pointer;
   ${props => props.fullWidth && css`
     width: 100%;
   `}
@@ -124,6 +126,34 @@ const Button = styled.button`
     cursor: arrow;
   `}
 `
+
+/********
+* FORMS *
+********/
+
+const StyledLabel = Text.withComponent('label').extend`
+  font-size: 1.6em;
+  display: inline-block;
+`;
+
+const StyledInput = styled.input`
+  font-size: 1.6em;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 8px;
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid ${Colors.midGrey};
+  border-radius: 4px;
+  ${props => props.error && css`
+    border: 1px solid ${Colors.error};
+  `}
+`;
+
+const ErrorMessage = Text.extend`
+  display: inline-block;
+  font-size: 1.6em;
+  color: ${Colors.error};
+`;
 
 export {
   Colors,
@@ -137,4 +167,7 @@ export {
   SectionBody,
   CenteredSectionBody,
   Button,
+  StyledLabel,
+  StyledInput,
+  ErrorMessage,
 };

@@ -1,34 +1,23 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 
 import {
-  Colors,
-  Text,
+  StyledLabel,
+  StyledInput,
+  ErrorMessage,
 } from './UIKit';
 
-const StyledLabel = Text.withComponent('label').extend`
-  display: block;
-`;
-
-const StyledInput = styled.input`
-  font-size: 1.6em;
-  padding: 8px;
-  box-sizing: border-box;
-  width: 100%;
-  border: 1px solid ${Colors.midGrey};
-  border-radius: 4px;
-`;
-
 class ValidatedInput extends Component {
-
-  // TODO run validator from props
-
   render() {
-    const { name, value } = this.props;
+    const { name, title, value, onChange, errorMsg } = this.props;
+    const isValid = this.props.isValid || this.props.isValid === null; // initial state is null, avoids loading with errors prematurely
+
     return(
-      <div style={{padding: '4px 0'}}>
-        <StyledLabel paddingBottom='4px'>{name}</StyledLabel>
-        <StyledInput value={value} />
+      <div style={{paddingBottom: '12px'}}>
+        <div style={{paddingBottom: '4px'}}>
+          <StyledLabel color={ isValid ? 'darkGrey' : 'error'}>{title}</StyledLabel>
+          { !isValid && <ErrorMessage>&nbsp;({errorMsg})</ErrorMessage> }
+        </div>
+        <StyledInput name={name} value={value} onChange={onChange} error={!isValid}/>
       </div>
     )
   }

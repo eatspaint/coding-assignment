@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
 import Emoji from 'react-emoji-render';
+import validator from 'validator';
 
 import Instructions from './Instructions';
 import History from './History';
@@ -28,49 +29,90 @@ const Nav = styled.div`
 `;
 
 class App extends Component {
-  state = {
-    // form data
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    address: '',
-    expectedRent: '',
-    // validation state
-    firstNameIsValid: null,
-    lastNameIsValid: null,
-    emailIsValid: null,
-    phoneIsValid: null,
-    addressIsValid: null,
-    // loader states
-    loadingGoogleMaps: false,
-    loadingRentZestimate: false,
-    sendingEmail: false,
-    // modal state
-    modalIsOpen: true,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      // form data
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: '',
+      address: '',
+      // validation state
+      firstNameIsValid: null,
+      lastNameIsValid: null,
+      emailIsValid: null,
+      phoneIsValid: null,
+      addressIsValid: null,
+      // loader states
+      loadingGoogleMaps: false,
+      loadingRentZestimate: false,
+      sendingEmail: false,
+      // modal state
+      modalIsOpen: false,
+      // zestimate
+      rentEstimate: '3980'
+    }
+    this.validators = {
+      firstName: this.validateNotBlank,
+      lastName: this.validateNotBlank,
+      phone: this.validatePhone,
+      email: this.validateEmail,
+      address: this.validateNotBlank,
+    }
+    this.onValidatedInputChange = this.onValidatedInputChange.bind(this);
+  }
 
-  // TODO 4. Zillow API to calc Rent Zestimate, load into modal or something
-  // TODO 5. user can enter expected rent, if varied from Zestimate
+  // TODO 3. gather user address, autocomplete w/ Google Maps || set error if invalid
+  // TODO 4. Zillow API to calc Rent Zestimate
   // TODO 6. send information in email to user, along w/ IP address
-  // TODO 7. localstore data
 
   closeModal = () => { this.setState({ modalIsOpen: false }) };
 
+  onValidatedInputChange = ({ target: { name, value }}) => {
+    this.setState({ [name]: value, [`${name}IsValid`]: this.validators[name](value) });
+  }
+  onAddressInputChange = (value) => {
+    this.setState({ address: value, addressIsValid: this.validators.address(value) });
+  }
+
+  // VALIDATORS
+  validateNotBlank = (value) => { return value !== null && value.length > 0 };
+  validateEmail = (value) => { return value !== null && validator.isEmail(value) };
+  validatePhone = (value) => { return value !== null && validator.isMobilePhone(validator.blacklist(value, '\\.\\-\\(\\)'), 'en-US') };
+
+  // ESTIMATE
+  calculateEstimate = () => {
+    this.setState({modalIsOpen: true});
+  }
+
   render() {
     const {
-      firstName, lastName, phone, email, address, expectedRent, // data
+      firstName, lastName, phone, email, address, // data
       firstNameIsValid, lastNameIsValid, emailIsValid, phoneIsValid, addressIsValid, // validations
-      loadingGoogleMaps, loacingRentZestimate, sendingEmail, // loading
+      // loadingGoogleMaps, loadingRentZestimate, sendingEmail, // loading
       modalIsOpen, // modal
+      rentEstimate, // zestimate
     } = this.state;
+
+    const userData = [
+      { name: 'firstName', title: 'First Name', value: firstName, isValid: firstNameIsValid, onChange: this.onValidatedInputChange, errorMsg: 'Cannot be blank'},
+      { name: 'lastName', title: 'Last Name', value: lastName, isValid: lastNameIsValid, onChange: this.onValidatedInputChange, errorMsg: 'Cannot be blank'},
+      { name: 'phone', title: 'Phone', value: phone, isValid: phoneIsValid, onChange: this.onValidatedInputChange, errorMsg: 'Please enter a valid US phone number'},
+      { name: 'email', title: 'Email', value: email, isValid: emailIsValid, onChange: this.onValidatedInputChange, errorMsg: 'Please enter a valid email address'},
+      { name: 'address', title: 'Address', value: address, isValid: addressIsValid, onChange: this.onAddressInputChange, errorMsg: 'Please enter a valid address'},
+    ]
+
+    const validations = [firstNameIsValid, lastNameIsValid, emailIsValid, phoneIsValid, addressIsValid];
+    const total = validations.length;
+    const completion = validations.filter( validation => (validation === true) ).length;
 
     return (
       <div>
 
         <Nav>
           <Logo>Ongbel <Emoji text='🏘️'/></Logo>
-          <Text color='primary' link>I've updated my privacy policy, please stop following me.</Text>
+          { isBrowser && <Text color='primary' link>I've updated my privacy policy, please stop following me.</Text> }
         </Nav>
 
         <BrowserView device={isBrowser}>
@@ -80,41 +122,23 @@ class App extends Component {
               <History/>
             </Row>
             <Row>
-              <Data
-                firstName={firstName}
-                lastName={lastName}
-                phone={phone}
-                email={email}
-                address={address}
-                expectedRent={expectedRent}
-              />
-              <Progress
-                validators={[firstNameIsValid, lastNameIsValid, emailIsValid, phoneIsValid, addressIsValid]}
-              />
+              <Data userData={userData} submitEnabled={total === completion} calculateEstimate={this.calculateEstimate}/>
+              <Progress total={total} completion={completion}/>
             </Row>
           </Container>
         </BrowserView>
 
         <MobileView device={isMobile}>
           <Container>
-            <Progress
-              validators={[firstNameIsValid, lastNameIsValid, emailIsValid, phoneIsValid, addressIsValid]}
-            />
-            <Data
-              firstName={firstName}
-              lastName={lastName}
-              phone={phone}
-              email={email}
-              address={address}
-              expectedRent={expectedRent}
-            />
+            <Progress total={total} completion={completion}/>
+            <Data userData={userData} submitEnabled={total === completion} calculateEstimate={this.calculateEstimate}/>
             <History/>
             <Instructions/>
           </Container>
         </MobileView>
 
         { modalIsOpen &&
-          <Modal onBackgroundClick={this.closeModal}/>
+          <Modal onBackgroundClick={this.closeModal} address={address} rentEstimate={rentEstimate}/>
         }
 
       </div>

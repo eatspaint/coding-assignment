@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { isMobile } from 'react-device-detect';
 import Emoji from 'react-emoji-render';
 
 import {
-  Colors,
-  Logo,
   Heading,
   Text,
   Section,
   SectionHeader,
   SectionBody,
-  CenteredSectionBody,
   Button,
+  StyledInput,
 } from './UIKit';
 
 const ModalBackground = styled.div`
@@ -35,16 +32,47 @@ const ModalContainer = styled.div`
   box-sizing: border-box;
 `;
 
-class Modal extends Component {
+const BigText = Text.extend`
+  font-size: 3.8em;
+  font-weight: bold;
+  padding-bottom: 16px;
+  padding-top: 8px;
+`
 
+class Modal extends Component {
+  constructor(props) {
+    super(props);
+    let estimateInt = parseInt(this.props.rentEstimate, 10);
+    this.state = {
+      estimateMin: estimateInt - (estimateInt * 0.1),
+      estimateMax: estimateInt + (estimateInt * 0.1),
+      expected: null,
+    }
+  }
   onBackgroundClick = () => {
     this.props.onBackgroundClick();
   }
 
+  saveResult = () => {
+    let rawHistory = localStorage.getItem('ongbel.history');
+    let history = rawHistory ? JSON.parse(rawHistory) : [];
+    history.push({
+      address: this.props.address,
+      estimate: `$${this.state.estimateMin} to $${this.state.estimateMax}`,
+      expected: this.state.expected,
+    });
+    localStorage.setItem('ongbel.history', JSON.stringify(history));
+    this.onBackgroundClick();
+  }
+
+  handleChange = ({ target: {value} }) => { this.setState({expected: value}) };
+
   render() {
+    const { address } = this.props;
     return(
       <ModalBackground onClick={this.onBackgroundClick}>
-        <ModalContainer>
+        {/* prevent modal content clicks from dismissing */}
+        <ModalContainer onClick={(e) => {e.stopPropagation()}}>
           <Section>
 
             <SectionHeader>
@@ -52,10 +80,13 @@ class Modal extends Component {
             </SectionHeader>
 
             <SectionBody>
-              <Text>User Data</Text>
-              <Text>Results</Text>
-              <Text>Expected Rent</Text>
-              <Button fullWidth style={{marginBottom: 0}}>Save!</Button>
+              <Text>Rent Estimate for:</Text>
+              <BigText>{address}</BigText>
+              <Text>Monthly Amount:</Text>
+              <BigText>${this.state.estimateMin} to ${this.state.estimateMax}</BigText>
+              <Text>Thinking something else? Enter your expected rent here:</Text>
+              <StyledInput style={{margin: '16px 0', fontSize: '3.8em', fontWeight: 'bold'}} value={this.state.expected} onChange={this.handleChange}/>
+              <Button fullWidth style={{marginBottom: 0}} onClick={this.saveResult}>Save!</Button>
             </SectionBody>
 
           </Section>

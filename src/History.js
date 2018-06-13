@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import { isMobile } from 'react-device-detect';
 import Emoji from 'react-emoji-render';
 
 import {
-  Colors,
-  Logo,
   Heading,
   Text,
   Section,
@@ -19,7 +16,11 @@ class History extends Component {
     history: [],
   };
 
-  // TODO load localstore data into history
+  componentDidMount = () => {
+    let rawHistory = localStorage.getItem('ongbel.history');
+    if (rawHistory)
+      this.setState({ history: JSON.parse(rawHistory) });
+  }
 
   renderHistory = () => {
     if (this.state.history.length === 0) {
@@ -29,7 +30,9 @@ class History extends Component {
         </CenteredSectionBody>
       )
     } else {
-      return <Text>TODO: Build history</Text>
+      return this.state.history.map( data => (
+        <Text key={data.address} paddingBottom='8px'>{data.address}: {data.estimate} (expected ${data.expected})</Text>
+      ))
     }
   }
 

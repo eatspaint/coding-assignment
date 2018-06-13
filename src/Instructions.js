@@ -1,11 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
 import { isMobile } from 'react-device-detect';
 import Emoji from 'react-emoji-render';
 
 import {
-  Colors,
-  Logo,
   Heading,
   Text,
   Section,

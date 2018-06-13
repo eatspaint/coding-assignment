@@ -1,10 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
 import Emoji from 'react-emoji-render';
 
 import {
-  Colors,
-  Logo,
   Heading,
   Text,
   Section,
@@ -13,23 +10,27 @@ import {
   CenteredSectionBody,
 } from './UIKit';
 
-const Progress = ( {validators} ) => {
+const Progress = ( {completion, total} ) => {
 
-  // TODO calc percentage of completion based on validators prop
-
-  const total = validators.length;
-  const completion = validators.filter( validator => (validator === true) ).length;
+  let progress = Array(total).fill().map( (_, i) => {
+    if (completion === total)
+      return <Emoji text='🔥' key={i}/>
+    else if (i + 1 <= completion)
+      return <Emoji text='💰' key={i}/>
+    else
+      return <Emoji text='...' key={i}/>
+  } );
 
   return(
     <Section>
 
       <SectionHeader>
-        <Heading>Progress <Emoji text='⏰'/></Heading>
+        <Heading>Progress <Emoji text='💬'/></Heading>
       </SectionHeader>
 
       <SectionBody>
         <CenteredSectionBody>
-          <Text>{completion} of {total}</Text>
+          <Text style={{fontSize: '3.6em'}}>{ progress }</Text>
         </CenteredSectionBody>
       </SectionBody>
 
